@@ -22,7 +22,7 @@ import net.runelite.client.util.Text;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Example"
+	name = "Slayer Task Sorter"
 )
 public class SlayerTaskSorterPlugin extends Plugin
 {
