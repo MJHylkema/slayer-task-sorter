@@ -187,12 +187,12 @@ public class SlayerTaskSorterPlugin extends Plugin
 
 	private void handleSortButtonOp(ScriptEvent event) {
 		for (SortMethod method : SortMethod.values()) {
+			// Special case for first index - reverse sort order
+			if (event.getOp() == 1) {
+				handleSortButtonClick(event);
+				return;
+			}
 			if (method.actionIndex == event.getOp()) {
-				// Special case for index zero - reverse order
-				if (method.actionIndex == 0) {
-					handleSortButtonClick(event);
-					return;
-				}
 				config.setSortingMethod(method);
 				reorderSortButton(method);
 				return;
