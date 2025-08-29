@@ -1,7 +1,8 @@
 # Slayer Task Sorter
 This plugin will by default sort the Slayer task lists by weighting.
 
-![weighting-order](weighting-order.png)
+<img width="305" height="256" alt="image" src="https://github.com/user-attachments/assets/a7327bba-453f-4d68-ba3c-2ebf760820b7" />
+
 
 ![grouped-by-status.png](grouped-by-status.png)
 
