@@ -99,7 +99,6 @@ public class SlayerTaskSorterPlugin extends Plugin
 			for (int i = 0; i < drawableChildren.length - 3; i++) {
 				if (isTaskRow(drawableChildren, i)) {
 					String friendlyName = extractFriendlyName(drawableChildren[i].getText());
-					log.info("Drawable: " + friendlyName);
 					entries.add(new TaskEntry(
 						this, getOnOpListenerWidgetFromName(clickableChildren, friendlyName),
 						drawableChildren[i],
@@ -157,18 +156,23 @@ public class SlayerTaskSorterPlugin extends Plugin
 		Comparator<TaskEntry> comparator = null;
 		switch (config.sortingMethod()) {
 			case SORT_BY_NAME:
-				comparator = Comparator.comparing(TaskEntry::getFriendlyName);
+				comparator = Comparator.comparing(TaskEntry::getFriendlyName, config.reverseSort()
+					? Comparator.nullsLast(Comparator.reverseOrder())   // ascending
+					: Comparator.nullsLast(Comparator.naturalOrder())   // descending
+					);
 				break;
 			case SORT_BY_WEIGHTING:
-				comparator = Comparator.comparing(TaskEntry::getWeighting, Comparator.nullsLast(Double::compareTo))
-					.reversed()
+				comparator = Comparator.comparing(TaskEntry::getWeighting, config.reverseSort()
+					? Comparator.nullsLast(Comparator.naturalOrder())   // ascending
+					: Comparator.nullsLast(Comparator.reverseOrder())   // descending
+					)
 					.thenComparing(entry -> entry.getStatus().getSortOrder())
-					.thenComparing(TaskEntry::getFriendlyName, Comparator.nullsLast(String::compareTo));
+					.thenComparing(TaskEntry::getFriendlyName);
 				break;
 		}
 
 		if (comparator != null) {
-			entries.sort(config.reverseSort() ? comparator.reversed() : comparator);
+			entries.sort(comparator);
 		}
 
 		for (int i = 0; i < entries.size(); i++) {
