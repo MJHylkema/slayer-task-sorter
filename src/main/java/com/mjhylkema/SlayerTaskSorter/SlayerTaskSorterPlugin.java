@@ -16,6 +16,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.Text;
@@ -30,7 +31,7 @@ public class SlayerTaskSorterPlugin extends Plugin
 	private Client client;
 
 	@Inject
-	private SlayerTasksSorterConfig config;
+	private SlayerTaskSorterConfig config;
 
 	@Inject
 	ClientThread clientThread;
@@ -49,16 +50,10 @@ public class SlayerTaskSorterPlugin extends Plugin
 		clientThread.invokeLater(this::initWidgets);
 	}
 
-	@Override
-	protected void shutDown() throws Exception
-	{
-		SlayerTaskSorterPlugin.log.info("Example stopped!");
-	}
-
 	@Provides
-	SlayerTasksSorterConfig provideConfig(ConfigManager configManager)
+	SlayerTaskSorterConfig provideConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(SlayerTasksSorterConfig.class);
+		return configManager.getConfig(SlayerTaskSorterConfig.class);
 	}
 
 	@Subscribe
@@ -73,6 +68,21 @@ public class SlayerTaskSorterPlugin extends Plugin
 			sortLater();
 		}
 	}
+	@Subscribe
+	public void onConfigChanged(ConfigChanged e)
+	{
+		switch (e.getKey())
+		{
+			case SlayerTaskSorterConfig.KEY_ACTIVE_SORT_METHOD:
+				reorderSortButton(config.sortingMethod());
+				break;
+			case SlayerTaskSorterConfig.KEY_REVERSE_SORT:
+				sortLater();
+				break;
+			default:
+				return;
+		}
+	}
 
 	private void sortLater() {
 
@@ -84,8 +94,6 @@ public class SlayerTaskSorterPlugin extends Plugin
 
 			entries.clear();
 
-			// Widgets are always in the same order for other players: name, world, icon.
-			// Local player doesn't have an opListener, so we have to skip it.
 			Widget[] drawableChildren = taskListsDrawable.getChildren();
 			if (drawableChildren == null) {
 				return;
@@ -100,7 +108,7 @@ public class SlayerTaskSorterPlugin extends Plugin
 				if (isTaskRow(drawableChildren, i)) {
 					String friendlyName = extractFriendlyName(drawableChildren[i].getText());
 					entries.add(new TaskEntry(
-						this, getOnOpListenerWidgetFromName(clickableChildren, friendlyName),
+						this, getClickableWidgetFromName(clickableChildren, friendlyName),
 						drawableChildren[i],
 						drawableChildren[i + 1],
 						drawableChildren[i + 2],
@@ -135,7 +143,7 @@ public class SlayerTaskSorterPlugin extends Plugin
 		});
 	}
 
-	private Widget getOnOpListenerWidgetFromName(Widget[] clickableWidgets, String name) {
+	private Widget getClickableWidgetFromName(Widget[] clickableWidgets, String name) {
 		for (Widget widget : clickableWidgets) {
 			if (Text.removeTags(widget.getName()).equals(name)) {
 				return widget;

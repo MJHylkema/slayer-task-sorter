@@ -5,7 +5,7 @@ import net.runelite.api.widgets.Widget;
 public class TaskEntry
 {
 	SlayerTaskSorterPlugin plugin;
-	Widget opListener;
+	Widget clickable;
 	Widget text;
 	Widget item;
 	Widget icon;
@@ -15,9 +15,11 @@ public class TaskEntry
 	Double weighting;
 	TaskStatus status;
 
-	public TaskEntry(SlayerTaskSorterPlugin plugin, Widget opListener, Widget text, Widget item, Widget icon, Widget percent) {
+	private static int ICON_OFFSET = 2;
+
+	public TaskEntry(SlayerTaskSorterPlugin plugin, Widget clickable, Widget text, Widget item, Widget icon, Widget percent) {
 		this.plugin = plugin;
-		this.opListener = opListener;
+		this.clickable = clickable;
 		this.text = text;
 		this.item = item;
 		this.icon = icon;
@@ -66,15 +68,15 @@ public class TaskEntry
 	}
 
 	public void setOriginalYAndRevalidate(int y) {
-		if (opListener != null) {
-			opListener.setOriginalY(y);
-			opListener.revalidate();
+		if (clickable != null) {
+			clickable.setOriginalY(y);
+			clickable.revalidate();
 		}
 		text.setOriginalY(y);
 		text.revalidate();
 		item.setOriginalY(y);
 		item.revalidate();
-		icon.setOriginalY(y + 2);
+		icon.setOriginalY(y + ICON_OFFSET);
 		icon.revalidate();
 		percent.setOriginalY(y);
 		percent.revalidate();

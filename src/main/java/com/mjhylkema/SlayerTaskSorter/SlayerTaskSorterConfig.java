@@ -5,10 +5,13 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
 @ConfigGroup("slayerTaskSorter")
-public interface SlayerTasksSorterConfig extends Config
+public interface SlayerTaskSorterConfig extends Config
 {
+	static String KEY_ACTIVE_SORT_METHOD = "activeSortMethod";
+	static String KEY_REVERSE_SORT = "reverseSort";
+
 	@ConfigItem(
-		keyName = "activeSortMethod",
+		keyName = KEY_ACTIVE_SORT_METHOD,
 		name = "Sort by",
 		description = "The active sort method that's used for sorting slayer tasks"
 	)
@@ -17,7 +20,7 @@ public interface SlayerTasksSorterConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "activeSortMethod",
+		keyName = KEY_ACTIVE_SORT_METHOD,
 		name = "",
 		description = ""
 	)
@@ -25,7 +28,7 @@ public interface SlayerTasksSorterConfig extends Config
 
 
 	@ConfigItem(
-		keyName = "reverseSort",
+		keyName = KEY_REVERSE_SORT,
 		name = "Reverse sort order",
 		description = "Reverse the sort method"
 	)
@@ -34,7 +37,7 @@ public interface SlayerTasksSorterConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "reverseSort",
+		keyName = KEY_REVERSE_SORT,
 		name = "",
 		description = ""
 	)
