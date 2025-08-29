@@ -128,7 +128,6 @@ public class SlayerTaskSorterPlugin extends Plugin
 				return;
 			}
 
-			taskListTitle.setOnClickListener((JavaScriptCallback) this::handleSortButtonClick);
 			taskListTitle.setOnOpListener((JavaScriptCallback) this::handleSortButtonOp);
 			taskListTitle.setHasListener(true);
 			reorderSortButton(config.sortingMethod());
@@ -180,18 +179,14 @@ public class SlayerTaskSorterPlugin extends Plugin
 		}
 	}
 
-	private void handleSortButtonClick(ScriptEvent event) {
-		config.setReverseOrder(!config.reverseSort());
-		sortLater();
-	}
-
 	private void handleSortButtonOp(ScriptEvent event) {
+		// Special case for first index - reverse sort order
+		if (event.getOp() == 1) {
+			config.setReverseOrder(!config.reverseSort());
+			sortLater();
+			return;
+		}
 		for (SortMethod method : SortMethod.values()) {
-			// Special case for first index - reverse sort order
-			if (event.getOp() == 1) {
-				handleSortButtonClick(event);
-				return;
-			}
 			if (method.actionIndex == event.getOp()) {
 				config.setSortingMethod(method);
 				reorderSortButton(method);
